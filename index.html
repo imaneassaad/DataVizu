@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<head>
+  <title>Vega Lite Bar Chart</title>
+  <meta charset="utf-8">
+
+  <script src="https://cdn.jsdelivr.net/npm/vega@4.3.0/build/vega.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@3.0.0-rc10/build/vega-lite.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@3.24.1/build/vega-embed.js"></script>
+
+  <style media="screen">
+    /* Add space between Vega-Embed links  */
+    .vega-actions a {
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+
+
+
+   VISU 1
+
+
+  <h1>Paris</h1>
+  <!-- Container for the visualization -->
+  <div id="vis"> </div>
+
+  <script>
+
+
+  // Assign the specification to a local variable vlSpec.
+  var vlSpec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v3.json",
+  "description": "A simple bar chart with embedded data.",
+  "width": 360,
+  "data": {
+    "values": [
+      {"year": "2013","taux": 6.5}, {"year": "2014","taux": 6.6}, {"year": "2015","taux": 6.7},
+      {"year": "2016","taux": 7}, {"year": "2017","taux": 6.8}
+    ]
+  },
+  "mark": "line",
+  "encoding": {
+    "x": {"field": "year", "type": "ordinal"},
+    "y": {"field": "taux", "type": "quantitative", "scale":{"domain": [6.3,7.5]}},
+    "color": {"value" : "purple"},
+    "tooltip": {"field": "taux", "type": "quantitative"}
+  }
+};
+
+  // Embed the visualization in the container with id `vis`
+  vegaEmbed("#vis", vlSpec);
+
+
+  </script>
+
+
+  VISU 2
+
+<h1>Number of Citizens killed by Terrorist attacks </h1>
+  <!-- Container for the visualization -->
+  <div id="vis2"> </div>
+
+  <script>
+
+
+  // Assign the specification to a local variable vlSpec.
+  var vlSpec1 = {
+
+  "$schema": "https://vega.github.io/schema/vega-lite/v3.json",
+
+  "width": 800,
+
+  "data": {"url": "https://raw.githubusercontent.com/imaneassaad/DataVizu/master/Terrorism.csv", "format": { "type": "dsv", "delimiter": ";" }},
+
+  "mark": {
+
+    "type": "line",
+
+    "interpolate": "monotone"
+
+  },
+
+  "encoding": {
+
+    "color": {"value" : "purple"},
+
+    "x": {"field": "Year", "type": "temporal"},
+
+    "y": {"field": "Number of citizens dead", "type": "quantitative"}
+
+  }
+
+};
+
+  // Embed the visualization in the container with id `vis`
+  vegaEmbed("#vis2", vlSpec1);
+
+  </script>
+
+
+
+VISU 3
+
+<h1> Proportion of people killed by Terrorist attacks </h1>
+  <!-- Container for the visualization -->
+  <div id="vis3"> </div>
+
+  <script>
+
+
+  // Assign the specification to a local variable vlSpec.
+  var vlSpec1 = 
+
+
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v3.json",
+
+  "width": 800,
+
+  "description": "Proportion of people killed by Terrorist attacks",
+
+  "data": {"url": "https://raw.githubusercontent.com/imaneassaad/DataVizu/master/Number of killed.csv", "format": { "type": "dsv", "delimiter": ";" }},
+
+  "mark": "line",
+
+  "encoding": {
+    "x": {"timeUnit": "year", "field": "Year", "type": "temporal"},
+
+    "y": { "field": "Number of Killed", "type": "quantitative"},
+
+    "color": {"field": "target", "type": "nominal"},
+  }
+}
+
+  vegaEmbed("#vis3", vlSpec1);
+
+  </script>
+
+
+VISU 4 
+
+<h1> Terrorist groups </h1>
+
+  <div id="vis4"> </div>
+
+  <script>
+
+  var vlSpec1 =
+
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v3.json",
+  "data": {"url": "https://raw.githubusercontent.com/imaneassaad/DataVizu/master/Number of killed.csv", "format": { "type": "dsv", "delimiter": ";" }},
+  "width": 800,
+  "height": 400,
+  "layer": [
+    {
+      "encoding": {
+        "x": {"timeUnit": "year", "field": "Year", "type": "temporal"},
+        "y": {"field": "Number of Killed", "type": "quantitative"},
+        "color": {"field": "target", "type": "nominal"}
+      },
+      "layer": [{
+        "mark": "line"
+      },{
+        "selection": {
+          "label": {
+            "type": "single",
+            "nearest": true,
+            "on": "mouseover",
+            "encodings": [
+              "x"
+            ],
+            "empty": "none"
+          }
+        },
+        "mark": "point",
+        "encoding": {
+          "opacity": {
+            "condition": {
+              "selection": "label",
+              "value": 1
+            },
+            "value": 0
+          }
+        }
+      }]
+    },
+    {
+      "transform": [
+        {
+          "filter": {
+            "selection": "label"
+          }
+        }
+      ],
+      "layer": [{
+        "mark": {
+         "type": "rule",
+         "color": "gray"
+        },
+        "encoding": {
+          "x": {
+            "type": "temporal",
+            "field": "Year"
+          }
+        }
+      }, {
+        "encoding": {
+          "text": {
+            "type": "quantitative",
+            "field": "Number of Killed"
+          },
+          "x": {
+            "type": "temporal",
+            "field": "Year"
+          },
+          "y": {
+            "type": "quantitative",
+            "field": "Number of Killed"
+          }
+        },
+        "layer": [{
+          "mark": {
+            "type": "text",
+            "stroke": "white",
+            "strokeWidth": 2,
+            "align": "left",
+            "dx": 5,
+            "dy": -5
+          }
+        }, {
+          "mark": {
+            "type": "text",
+            "align": "left",
+            "dx": 5,
+            "dy": -5
+          }
+        }]
+      }]
+   }
+ ]
+}
+
+  vegaEmbed("#vis4", vlSpec1);
+
+  </script>
+
+  <iframe width="100%" height="300px" frameBorder="0" allowfullscreen src="https://umap.openstreetmap.fr/fr/map/carte-sans-nom_275467?scaleControl=false&miniMap=false&scrollWheelZoom=false&zoomControl=true&allowEdit=false&moreControl=true&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=true&onLoadPanel=undefined&captionBar=false"></iframe><p><a href="https://umap.openstreetmap.fr/fr/map/carte-sans-nom_275467">Voir en plein écran</a></p>
+
+
+
+
+
+</body>
+</html>
